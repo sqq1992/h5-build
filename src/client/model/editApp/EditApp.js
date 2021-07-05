@@ -2,20 +2,23 @@ import React, {forwardRef, useImperativeHandle, useState} from 'react'
 import { Form, Input, message } from 'antd'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import { isEmpty } from 'lodash'
 import {Dialog} from "@/client/components/Dialog";
 
 const Content = styled.div`
   margin-top: 30px;
 `
 
-function CreateApp({
-  addApp = ()=>{}
+function EditApp({
+  currentObj = {},
+  addApp = ()=>{},
+  editAppInfo = ()=>{}
 },ref) {
-
+  const [isNew] = useState(isEmpty(currentObj));
   const history = useHistory()
   const [formData, setFormData] = useState({
-    name: '',
-    desc: ''
+    name: currentObj.name || '',
+    desc: currentObj.desc || ''
   })
 
   const okCallback = () => {
@@ -24,14 +27,23 @@ function CreateApp({
       return false
     }
 
-    const appId = addApp({
-      name: formData.name,
-      desc: formData.desc
-    })
-    if(appId){
-      setTimeout(() => {
-        history.push(`/edit?appId=${appId}`)
-      }, 500)
+    if(isNew){
+      const appId = addApp({
+        name: formData.name,
+        desc: formData.desc
+      })
+      if(appId){
+        setTimeout(() => {
+          history.push(`/edit?appId=${appId}`)
+        }, 500)
+      }
+    }else {
+      const result = editAppInfo({
+        ...formData,
+        id: currentObj.id
+      })
+
+
     }
   }
 
@@ -61,12 +73,12 @@ function CreateApp({
   )
 }
 
-const DialogCreateApp = Dialog({
+const DialogEditApp = Dialog({
   title: '创建应用',
   width: 560,
   centered: true,
   wrapClassName: '',
-})(forwardRef(CreateApp))
+})(forwardRef(EditApp))
 
 
-export default DialogCreateApp
+export default DialogEditApp

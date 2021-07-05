@@ -40,6 +40,13 @@ function useAppList() {
     return list.map(item => item.name).includes(name)
   }
 
+  const _checkIds = (id) => {
+    const list = _getList()
+    return list.some((elem)=>{
+      return elem === id;
+    })
+  }
+
   const getAppDetail = useCallback((appId) => {
     const list = _getList()
     const app = list.filter(item => item.id === appId)[0] || null
@@ -64,24 +71,18 @@ function useAppList() {
   }, [])
 
   const editAppInfo = useCallback((app) => {
-    if (!_checkName(app.name)) {
-      const list = _getList()
-      const newList = list.map(item => {
-        if (app.id === item.id) {
-          return {
-            ...item,
-            name: app.name,
-            desc: app.desc
-          }
+    const list = _getList()
+    const newList = list.map(item => {
+      if (app.id === item.id) {
+        return {
+          ...item,
+          name: app.name,
+          desc: app.desc
         }
-        return item
-      })
-      _setAppList(newList)
-
-      return true
-    }
-    message.warn('应用名重复，请更改')
-    return false
+      }
+      return item
+    })
+    _setAppList(newList)
   }, [])
 
   const saveAppLayout = useCallback((appId, layout) => {

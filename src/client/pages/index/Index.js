@@ -2,9 +2,8 @@ import React, {useRef, useState} from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { List, Button, Modal } from 'antd'
-import DialogCreateApp from "@/client/model/editApp/CreateApp";
+import DialogEditApp from "@/client/model/editApp/EditApp";
 import useAppList from "@/client/hooks/useAppList";
-
 
 const Page = styled.div`
   width: 100%;
@@ -45,7 +44,8 @@ const ListContent = styled(ListWords)`
 
 function Index() {
     const history = useHistory()
-    let dialogCreateAppInstance = useRef({})
+    const [record, setRecord] = useState({});
+    let dialogEditAppInstance = useRef({})
 
     const {
         appList,
@@ -59,9 +59,14 @@ function Index() {
         history.push(`/edit?appId=${id}`)
     }
 
-    const editItem = (item) => () => {
+    const createItem = () => {
+        setRecord({});
+        dialogEditAppInstance.current.show();
+    };
 
-        // setSelectItem(item)
+    const editItem = (item) => () => {
+        setRecord(item);
+        dialogEditAppInstance.current.show();
     }
 
     const removeItem = (item) => () => {
@@ -74,14 +79,21 @@ function Index() {
         })
     }
 
+    const clear = () => {
+        Modal.confirm({
+            title: '是否清空所有项目？',
+            onOk: () => {
+                clearApp()
+            }
+        })
+    }
+
   return (
     <Page>
         <MainContent>
             <Header>
-                <Button type="primary" onClick={()=>{
-                    dialogCreateAppInstance.current.show();
-                }}>创建应用</Button>
-                <Button type="danger" style={{ marginLeft: '20px' }} >清空应用</Button>
+                <Button type="primary" onClick={createItem}>创建应用</Button>
+                <Button type="danger" style={{ marginLeft: '20px' }} onClick={clear}>清空应用</Button>
             </Header>
             <List
                 dataSource={appList}
@@ -101,11 +113,13 @@ function Index() {
             />
         </MainContent>
 
-        <DialogCreateApp
+        <DialogEditApp
             getInstance={(instance) => {
-                dialogCreateAppInstance.current = instance
+                dialogEditAppInstance.current = instance
             }}
             addApp={addApp}
+            editAppInfo={editAppInfo}
+            currentObj={record}
         />
     </Page>
   )

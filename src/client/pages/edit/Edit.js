@@ -4,6 +4,12 @@ import { v4 as uuidv4 } from 'uuid'
 import styled from 'styled-components'
 
 import queryString from 'query-string'
+import CustomHeader from "@/client/model/customApp/customHeader/CustomHeader";
+import useAppList from "@/client/hooks/useAppList";
+import pageListReducer from "@/client/redux/reducers/pageListReducers";
+import {clearPageList, setPageList} from "@/client/actions/pageListAction";
+import {clearCurrentSelectPage, setCurrentSelectPage} from "@/client/actions/currentSelectPage";
+import ComponentPanel from "@/client/model/customApp/componentPanel/ComponentPanel";
 
 const Page = styled.div`
   position: absolute;
@@ -27,10 +33,73 @@ const MainContent = styled.div`
 
 function Edit() {
 
+    const { getAppDetail } = useAppList()
+    const pageListReducer = useSelector((state) => state.pageListReducer)
+    const dispatch = useDispatch()
+    const panelShow = useSelector(state => state.componentPanelReducer)
+
+    const _initPage = useCallback(() => {
+        const initPage = {
+            title: '首页',
+            id: uuidv4(),
+            path: 'index',
+            componentList: []
+        }
+        const stepId = uuidv4()
+        dispatch(
+            setPageList([initPage])
+        )
+        dispatch(
+            setCurrentSelectPage(initPage.id)
+        )
+    }, [dispatch])
+
+    useEffect(() => {
+
+        const appId = queryString.parse(window.location.search).appId
+        const appDetail = getAppDetail(appId)
+
+        try {
+            if (!appDetail.layout) {
+                return _initPage()
+            }
+            const layout = JSON.parse(appDetail.layout)
+
+            if (layout.length === 0) {
+                _initPage()
+            } else {
+                dispatch(
+                    setPageList(layout)
+                )
+                dispatch(
+                    setCurrentSelectPage(layout[0].id)
+                )
+            }
+        } catch (err) {
+            console.log(err)
+            _initPage()
+        }
+
+        return () => {
+            dispatch(
+                clearPageList()
+            )
+            dispatch(
+                clearCurrentSelectPage()
+            )
+        }
+
+    }, [dispatch,getAppDetail,_initPage])
+
+    console.log('pageListReducer', pageListReducer);
+
   return (
     <Page>
       <div>
-          Edit页面
+          <CustomHeader />
+          <MainContent>
+              {panelShow && <ComponentPanel />}
+          </MainContent>
       </div>
     </Page>
   )
