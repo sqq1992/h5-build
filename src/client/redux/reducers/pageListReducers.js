@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 import { setPageList, clearPageList } from '@/client/actions/pageListAction'
 
-const initialState = [1,2,3]
+const initialState = []
 
 const pageListReducer = handleActions(
   {

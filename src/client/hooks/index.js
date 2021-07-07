@@ -1,12 +1,12 @@
-// import useGetComponentList from './useGetComponentList'
-// import useGetCurrentSelectComponent from './useGetCurrentSelectComponent'
+import useGetComponentList from './useGetComponentList'
+import useGetCurrentSelectComponent from './useGetCurrentSelectComponent'
 // import useGetCurrentSelectPage from './useGetCurrentSelectPage'
-// import useDeleteCurrentComponent from './useDeleteCurrentComponent'
+import useDeleteCurrentComponent from './useDeleteCurrentComponent'
 import useAppList from './useAppList'
 
 export {
-  // useGetComponentList,
-  // useGetCurrentSelectComponent,
+  useGetComponentList,
+  useGetCurrentSelectComponent,
   // useGetCurrentSelectPage,
   // useDeleteCurrentComponent,
   useAppList

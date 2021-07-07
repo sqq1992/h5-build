@@ -5,6 +5,8 @@ import { CloseOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 import { useDispatch, useSelector } from 'react-redux'
 import { setComponentPanelVisible } from '@/client/actions/componentPanel'
+import {cleanEmpty, selectComponent} from "@/client/actions/componentList";
+import {componentList} from "@/component-list";
 
 
 const Panel = styled.div`
@@ -98,14 +100,28 @@ const ComponentItem = styled.div`
 function ComponentPanel() {
 
   const dispatch = useDispatch()
+  const [selectItem, setSelectItem] = useState(componentList[0])
 
   const closePanel = () => {
     dispatch(setComponentPanelVisible(false))
-
+    dispatch(cleanEmpty())
   }
 
   const selectTagList = (item) => {
     setSelectItem(item)
+  }
+
+  const componentConfirm = (item) => () => {
+
+    dispatch(
+        selectComponent({
+          type: item.componentType,
+          key: uuidv4(),
+          props: {
+            ...item.defaultProps
+          }
+        })
+    )
   }
 
 
@@ -121,6 +137,25 @@ function ComponentPanel() {
         </HeaderTitle>
         {/* <Button onClick={addBanner}>添加Banner</Button> */}
         <List>
+          <TagList>
+            {
+              componentList.map(item => (
+                  <TagItem onClick={() => selectTagList(item)} isActive={item.id === selectItem.id} key={item.id}>
+                    <div>{item.name}</div>
+                  </TagItem>
+              ))
+            }
+          </TagList>
+          <ComponentSelect>
+            {
+              selectItem.children.map(item => (
+                  <ComponentItem key={item.id} onClick={componentConfirm(item)}>
+                    <img src={item.imgUrl} />
+                    <div>{item.name}</div>
+                  </ComponentItem>
+              ))
+            }
+          </ComponentSelect>
         </List>
       </PanelContainer>
       <Mask onClick={closePanel} />

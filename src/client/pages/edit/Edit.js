@@ -10,6 +10,7 @@ import pageListReducer from "@/client/redux/reducers/pageListReducers";
 import {clearPageList, setPageList} from "@/client/actions/pageListAction";
 import {clearCurrentSelectPage, setCurrentSelectPage} from "@/client/actions/currentSelectPage";
 import ComponentPanel from "@/client/model/customApp/componentPanel/ComponentPanel";
+import SandBox from "@/client/model/customApp/sandBox/SandBox";
 
 const Page = styled.div`
   position: absolute;
@@ -99,6 +100,7 @@ function Edit() {
           <CustomHeader />
           <MainContent>
               {panelShow && <ComponentPanel />}
+              <SandBox />
           </MainContent>
       </div>
     </Page>
