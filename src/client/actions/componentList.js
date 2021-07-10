@@ -1,7 +1,7 @@
 import { setPageList } from './pageListAction'
 import { v4 as uuidv4 } from 'uuid'
 import { setComponentPanelVisible } from './componentPanel'
-import {setCurrentSelectComponent} from "@/client/redux/reducers/currentSelectComponentReducer";
+import {setCurrentSelectComponent} from "@/client/actions/currentSelectComponent";
 
 const addComponent = () => (dispatch, getState) => {
 
@@ -75,6 +75,7 @@ const selectComponent = (component) => (dispatch, getState) => {
   )
 
   dispatch(setComponentPanelVisible(false))
+  dispatch(setCurrentSelectComponent(component.key))
 
 }
 

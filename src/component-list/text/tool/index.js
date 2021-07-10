@@ -7,7 +7,7 @@ import ToolContainer from '@/component-list/common/ToolContainer'
 import { useGetComponentList, useGetCurrentSelectComponent, useDeleteCurrentComponent } from '@/client/hooks'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import {setCurrentSelectComponent} from "@/client/redux/reducers/currentSelectComponentReducer";
+import {setCurrentSelectComponent} from "@/client/actions/currentSelectComponent";
 
 const TextArea = styled(Input.TextArea) `
   width: 300px;

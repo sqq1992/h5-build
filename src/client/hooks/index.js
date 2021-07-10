@@ -8,6 +8,6 @@ export {
   useGetComponentList,
   useGetCurrentSelectComponent,
   // useGetCurrentSelectPage,
-  // useDeleteCurrentComponent,
+  useDeleteCurrentComponent,
   useAppList
 }

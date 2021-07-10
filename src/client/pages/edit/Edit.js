@@ -11,6 +11,7 @@ import {clearPageList, setPageList} from "@/client/actions/pageListAction";
 import {clearCurrentSelectPage, setCurrentSelectPage} from "@/client/actions/currentSelectPage";
 import ComponentPanel from "@/client/model/customApp/componentPanel/ComponentPanel";
 import SandBox from "@/client/model/customApp/sandBox/SandBox";
+import EditPanel from "@/client/model/customApp/editPanel/EditPanel";
 
 const Page = styled.div`
   position: absolute;
@@ -101,6 +102,7 @@ function Edit() {
           <MainContent>
               {panelShow && <ComponentPanel />}
               <SandBox />
+              <EditPanel />
           </MainContent>
       </div>
     </Page>

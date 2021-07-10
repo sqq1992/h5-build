@@ -4,6 +4,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useGetComponentList, useGetCurrentSelectComponent } from '@/client/hooks'
 import { Result, Button } from 'antd'
 import {addComponent} from "@/client/actions/componentList";
+import Wrap from "@/component-list/common/ComponentWrap";
+import {componentClientMap} from "@/component-list";
+import {setCurrentSelectComponent} from "@/client/redux/reducers/currentSelectComponentReducer";
 
 const Viewer = styled.div`
   position: relative;
@@ -43,6 +46,12 @@ function SandBox() {
   const componentList = useGetComponentList()
   const currentSelectComponent = useGetCurrentSelectComponent()
 
+  const select = (key) => {
+    if ((!currentSelectComponent) || (currentSelectComponent.key !== key)) {
+      dispatch(setCurrentSelectComponent(key))
+    }
+  }
+
   const add = () => {
     dispatch(addComponent())
   }
@@ -54,7 +63,14 @@ function SandBox() {
           if (item.type === 'empty') {
             return <Empty key={item.key}>请在此处添加组件</Empty>
           }
-          return <div>3232</div>
+          return (
+              <Wrap
+                  key={item.key}
+                  component={item}
+              >
+                {componentClientMap[item.type](item.props, () => select(item.key))}
+              </Wrap>
+          )
         }) : <Result
             status="info"
             subTitle="请先添加组件"
