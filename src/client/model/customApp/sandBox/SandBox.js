@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { useGetComponentList, useGetCurrentSelectComponent } from '@/client/hooks'
 import { Result, Button } from 'antd'
-import {addComponent} from "@/client/actions/componentList";
+import {addComponent, addComponentFromWrap} from "@/client/actions/componentList";
 import Wrap from "@/component-list/common/ComponentWrap";
 import {componentClientMap} from "@/component-list";
 import {setCurrentSelectComponent} from "@/client/redux/reducers/currentSelectComponentReducer";
@@ -56,6 +56,13 @@ function SandBox() {
     dispatch(addComponent())
   }
 
+  const addOver = (e) => {
+    dispatch(addComponentFromWrap(e.key, 'over'))
+  }
+  const addUnder = (e) => {
+    dispatch(addComponentFromWrap(e.key, 'under'))
+  }
+
   return (
     <Viewer>
       {
@@ -67,6 +74,8 @@ function SandBox() {
               <Wrap
                   key={item.key}
                   component={item}
+                  addComponentOver={addOver}
+                  addComponentUnder={addUnder}
               >
                 {componentClientMap[item.type](item.props, () => select(item.key))}
               </Wrap>
