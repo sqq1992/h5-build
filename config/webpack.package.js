@@ -79,12 +79,11 @@ const config = {
         ],
       },
       {
-        test: /\.(sa|sc|c)ss$/,
+        test: /\.(c)ss$/,
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
           'postcss-loader',
-          'sass-loader'
         ]
       }
     ]

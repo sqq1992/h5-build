@@ -52,6 +52,51 @@ function CustomHeader() {
     saveAppLayout
   } = useAppList()
 
+  const preview = () => {
+    axios.post(`${REQUEST_URL}/server/preview`, {
+      pageList
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      window.open(`${REQUEST_URL}/preview/${res.data.folderId}/${selectedPage.path}.html`)
+    })
+  }
+
+  const publish = () => {
+
+    const packageId = uuidv4()
+    // openPublishModal()
+
+    // ws.current = new WebSocket(`${WS_URL}/ws?packageId=${packageId}`)
+    //
+    // ws.current.onopen = (e) => {
+    //   ws.current.send(
+    //       JSON.stringify({
+    //         type: 'PAGELIST',
+    //         pageList,
+    //         packageId
+    //       })
+    //   )
+    // }
+    //
+    // ws.current.onmessage = (e) => {
+    //   const data = JSON.parse(e.data)
+    //   if (data.status !== 'finish') {
+    //     addPublishStatus(JSON.parse(e.data))
+    //   } else {
+    //     if (publishModalShowRef) {
+    //       setResultFile({
+    //         path: data.filePath,
+    //         folderId: data.folderId
+    //       })
+    //     }
+    //     ws.current.close()
+    //   }
+    // }
+  }
+
   const changePage = (id) => {
     // dispatch(cleanEmpty())s
     dispatch(setCurrentSelectPage(id))
@@ -79,6 +124,7 @@ function CustomHeader() {
             <Button
               type="link"
               icon={<EyeOutlined />}
+              onClick={preview}
             >
               预览
               </Button>
@@ -96,7 +142,7 @@ function CustomHeader() {
             <Button
               type="primary"
               icon={<SendOutlined />}
-
+              onClick={publish}
             >
               发布
               </Button>
