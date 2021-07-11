@@ -6,8 +6,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 import { useAppList } from '@/client/hooks'
 import queryString from 'query-string'
+import { v4 as uuidv4 } from 'uuid'
 import useGetCurrentSelectPage from "@/client/hooks/useGetCurrentSelectPage";
 import {setCurrentSelectPage} from "@/client/actions/currentSelectPage";
+import usePublishModal from "@/client/model/customApp/customHeader/hooks/usePublishModal";
+import PublishModal from "@/client/model/customApp/customHeader/components/PublishModal";
 
 const { Option } = Select
 const { Header } = Layout
@@ -47,6 +50,18 @@ function CustomHeader() {
   const dispatch = useDispatch()
   const pageList = useSelector(state => state.pageListReducer)
   const selectedPage = useGetCurrentSelectPage()
+  const ws = useRef(null)
+
+  const {
+    publishStatus,
+    addPublishStatus,
+    publishModalShow,
+    publishModalShowRef,
+    openPublishModal,
+    hidePublishModal,
+    resultFile,
+    setResultFile
+  } = usePublishModal()
 
   const {
     saveAppLayout
@@ -67,34 +82,34 @@ function CustomHeader() {
   const publish = () => {
 
     const packageId = uuidv4()
-    // openPublishModal()
+    openPublishModal()
 
-    // ws.current = new WebSocket(`${WS_URL}/ws?packageId=${packageId}`)
-    //
-    // ws.current.onopen = (e) => {
-    //   ws.current.send(
-    //       JSON.stringify({
-    //         type: 'PAGELIST',
-    //         pageList,
-    //         packageId
-    //       })
-    //   )
-    // }
-    //
-    // ws.current.onmessage = (e) => {
-    //   const data = JSON.parse(e.data)
-    //   if (data.status !== 'finish') {
-    //     addPublishStatus(JSON.parse(e.data))
-    //   } else {
-    //     if (publishModalShowRef) {
-    //       setResultFile({
-    //         path: data.filePath,
-    //         folderId: data.folderId
-    //       })
-    //     }
-    //     ws.current.close()
-    //   }
-    // }
+    ws.current = new WebSocket(`${WS_URL}/ws?packageId=${packageId}`)
+
+    ws.current.onopen = (e) => {
+      ws.current.send(
+          JSON.stringify({
+            type: 'PAGELIST',
+            pageList,
+            packageId
+          })
+      )
+    }
+
+    ws.current.onmessage = (e) => {
+      const data = JSON.parse(e.data)
+      if (data.status !== 'finish') {
+        addPublishStatus(JSON.parse(e.data))
+      } else {
+        if (publishModalShowRef) {
+          setResultFile({
+            path: data.filePath,
+            folderId: data.folderId
+          })
+        }
+        ws.current.close()
+      }
+    }
   }
 
   const changePage = (id) => {
@@ -150,6 +165,12 @@ function CustomHeader() {
         </div>
       </HeaderContainer>
 
+      <PublishModal
+          publishModalShow={publishModalShow}
+          hidePublishModal={() => hidePublishModal(ws.current)}
+          publishStatus={publishStatus}
+          resultFile={resultFile}
+      />
     </Header>
   )
 

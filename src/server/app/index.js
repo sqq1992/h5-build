@@ -8,7 +8,7 @@ const mount = require('koa-mount')
 const path = require('path')
 const http = require('http')
 const WebSocket = require('ws')
-// const WebSocketAPI = require('./WebSocketAPI')
+const WebSocketAPI = require('./WebSocketAPI')
 const config = require('../config')
 
 const app = new Koa()
@@ -55,11 +55,11 @@ app.use(router.routes()).use(router.allowedMethods())
 
 const server = http.createServer(app.callback())
 
-// const wss = new WebSocket.Server({
-//   server,
-//   path: `${config.prefix}/ws`
-// })
-//
-// WebSocketAPI(wss, wsMap)
+const wss = new WebSocket.Server({
+  server,
+  path: `${config.prefix}/ws`
+})
+
+WebSocketAPI(wss, wsMap)
 
 server.listen(3701)
