@@ -9,17 +9,16 @@ const webpack = require('webpack')
 module.exports = merge(baseConfig, {
   mode: 'production',
   output: {
-    publicPath: '/page-builder/'
+    publicPath: '/h5-build/'
   },
   module: {
     rules: [
       {
-        test: /\.(sa|sc|c)ss$/,
+        test: /\.(c)ss$/,
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
           'postcss-loader',
-          'sass-loader'
         ]
       }
     ]
