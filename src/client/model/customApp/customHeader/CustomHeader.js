@@ -11,6 +11,8 @@ import useGetCurrentSelectPage from "@/client/hooks/useGetCurrentSelectPage";
 import {setCurrentSelectPage} from "@/client/actions/currentSelectPage";
 import usePublishModal from "@/client/model/customApp/customHeader/hooks/usePublishModal";
 import PublishModal from "@/client/model/customApp/customHeader/components/PublishModal";
+import useNewPageModal from "@/client/model/customApp/customHeader/hooks/useNewPageModal";
+import NewPageModal from "@/client/model/customApp/customHeader/components/NewPageModal";
 
 const { Option } = Select
 const { Header } = Layout
@@ -51,6 +53,15 @@ function CustomHeader() {
   const pageList = useSelector(state => state.pageListReducer)
   const selectedPage = useGetCurrentSelectPage()
   const ws = useRef(null)
+
+  const {
+    newPageModalSubmit,
+    hideNewPageModal,
+    showNewPageModal,
+    newPageModalShow,
+    inputNewPageInfo,
+    newPageInfo
+  } = useNewPageModal()
 
   const {
     publishStatus,
@@ -128,7 +139,7 @@ function CustomHeader() {
               pageList.map(item => <Option value={item.id} key={item.id}>{item.title}-{item.path}</Option>)
             }
           </Select>
-          <Button >新增页面</Button>
+          <Button onClick={showNewPageModal}>新增页面</Button>
           <Button  style={{ marginLeft: '20px' }}>编辑当前页</Button>
           <Button  style={{ marginLeft: '20px' }} danger >删除当页</Button>
         </PageSelected>
@@ -164,6 +175,14 @@ function CustomHeader() {
           </ButtonGroup>
         </div>
       </HeaderContainer>
+
+      <NewPageModal
+          newPageModalShow={newPageModalShow}
+          hideNewPageModal={hideNewPageModal}
+          newPageModalSubmit={newPageModalSubmit}
+          inputNewPageInfo={inputNewPageInfo}
+          newPageInfo={newPageInfo}
+      />
 
       <PublishModal
           publishModalShow={publishModalShow}
